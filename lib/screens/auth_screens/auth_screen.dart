@@ -7,6 +7,7 @@ import 'package:zedfi/helpers/app_config.dart';
 import 'package:zedfi/helpers/app_router.dart';
 import 'package:zedfi/helpers/utilities.dart';
 import 'package:zedfi/screens/common_widgets/custom_text_form_field.dart';
+import 'package:zedfi/screens/common_widgets/feedback_widgets.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -118,6 +119,11 @@ class _AuthScreenState extends State<AuthScreen> {
                             context,
                             AppRouter.pinVerificationScreenRoute,
                           );
+                        }
+
+                        if (state is AuthFailure) {
+                          FeedbackWidgets(context)
+                              .showFailureSnackBar(snackBarText: state.error);
                         }
                       },
                       builder: (context, state) {

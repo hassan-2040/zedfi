@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:zedfi/helpers/utilities.dart';
 
 class AuthRepo {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  final Map<String, dynamic> phoneAuthStatus = {};
 
   User get currentUser {
     if (_firebaseAuth.currentUser == null) {
@@ -48,17 +49,15 @@ class AuthRepo {
     }
   }
 
-  Future<Map<String, dynamic>> sendSmsCode({
+  Future<void> sendSmsCode({
     required String phoneNumber,
   }) async {
-    final Map<String, dynamic> _temp = {};
     try {
       await _firebaseAuth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
-        // timeout: Duration(seconds: 30),
-        verificationCompleted: (AuthCredential credential) async {
-          await _firebaseAuth.signInWithCredential(credential);
-          _temp['autoSignInSuccess'] = true;
+        verificationCompleted: (AuthCredential credential) {
+          phoneAuthStatus['triggerAutoSignIn'] = true;
+          phoneAuthStatus['autoSignInCreds'] = credential;
         },
         verificationFailed: (FirebaseAuthException exception) {
           throw exception;
@@ -67,18 +66,21 @@ class AuthRepo {
           String verificationId,
           int? forceResendingToken,
         ) {
-          _temp['verificationId'] = verificationId;
-          _temp['forceResendingToken'] = forceResendingToken;
+          phoneAuthStatus['verificationId'] = verificationId;
+          phoneAuthStatus['forceResendingToken'] = forceResendingToken;
         },
+        forceResendingToken: phoneAuthStatus['forceResendingToken'],
         codeAutoRetrievalTimeout: (String verificationId) {
-          printInfo('auto retrieval timeout');
-          //TODO handle this
+          phoneAuthStatus['verificationId'] = verificationId;
         },
       );
-      return _temp;
     } on Exception catch (_) {
       rethrow;
     }
+  }
+
+  Future<void> signInWithCredentials(AuthCredential _credentials) async {
+    await _firebaseAuth.signInWithCredential(_credentials);
   }
 
   Future<void> signOut() async {
@@ -90,7 +92,6 @@ class AuthRepo {
     try {
       // Fetch sign-in methods for the email address
       final _list = await _firebaseAuth.fetchSignInMethodsForEmail(_email);
-
       // In case _list is not empty
       if (_list.isNotEmpty) {
         // Return true because there is an existing

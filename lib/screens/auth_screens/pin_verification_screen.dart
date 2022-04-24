@@ -2,9 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zedfi/blocs/auth_bloc/auth_bloc.dart';
 import 'package:zedfi/constants.dart';
 import 'package:zedfi/helpers/app_config.dart';
+import 'package:zedfi/helpers/app_router.dart';
+import 'package:zedfi/repositories/auth_repo.dart';
 import 'package:zedfi/screens/common_widgets/custom_text_form_field.dart';
+import 'package:zedfi/screens/common_widgets/feedback_widgets.dart';
 
 class PinVerificationScreen extends StatefulWidget {
   const PinVerificationScreen({Key? key}) : super(key: key);
@@ -89,6 +94,19 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
         }
       },
     );
+  }
+
+  String _getPin() {
+    return '${_firstDigitController.text}${_secondDigitController.text}${_thirdDigitController.text}${_fourthDigitController.text}${_fifthDigitController.text}${_sixthDigitController.text}';
+  }
+
+  _populateControllers() {
+    _firstDigitController.text = 'X';
+    _secondDigitController.text = 'X';
+    _thirdDigitController.text = 'X';
+    _fourthDigitController.text = 'X';
+    _fifthDigitController.text = 'X';
+    _sixthDigitController.text = 'X';
   }
 
   @override
@@ -317,7 +335,13 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                                   keyboardType: TextInputType.number,
                                   onChanged: (_s) {
                                     if (_s != null && _s.isNotEmpty) {
-                                      //TODO submit pin
+                                      BlocProvider.of<AuthBloc>(context)
+                                          .add(SubmitPhoneAuth(
+                                        pin: _getPin(),
+                                        verificationId: RepositoryProvider.of<
+                                                AuthRepo>(context)
+                                            .phoneAuthStatus['verificationId'],
+                                      ));
                                     }
                                   },
                                   inputFormatters: [
@@ -331,45 +355,82 @@ class _PinVerificationScreenState extends State<PinVerificationScreen> {
                           ],
                         ),
                       ),
-                      Row(
-                        children: [
-                          Text(
-                            'Didn\'t receive code? ',
-                            style: AppConfig.getTextStyle(
-                              textColor: Colors.grey,
-                              textSize: TextSize.small,
-                            ),
-                          ),
-                          Visibility(
-                            visible: _start != 0,
-                            child: Text(
-                              'Wait for $_start seconds',
-                              style: AppConfig.getTextStyle(
-                                textColor: Colors.black,
-                                textSize: TextSize.small,
-                              ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: _start == 0,
-                            child: RawMaterialButton(
-                              onPressed: () {
-                                setState(() {
-                                  _start = 60;
-                                });
-                                _startTimer();
-                                //TODO resend pin
-                              },
-                              child: Text(
-                                'Resend Sms',
+                      BlocConsumer<AuthBloc, AuthState>(
+                        listener: (context, state) {
+                          if (state is AuthFailure) {
+                            FeedbackWidgets(context).showFailureSnackBar(
+                              snackBarText: state.error,
+                            );
+                          }
+
+                          if (state is AuthSuccess) {
+                            //removing all screens in stack and pushing to home screen
+                            //also stopping from returning to previous screens with back button
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRouter.homeScreenRoute,
+                              (route) => false,
+                            );
+                          }
+                        },
+                        builder: (context, state) {
+                          return Row(
+                            children: [
+                              Text(
+                                'Didn\'t receive code? ',
                                 style: AppConfig.getTextStyle(
-                                  textColor: Colors.black,
+                                  textColor: Colors.grey,
                                   textSize: TextSize.small,
                                 ),
                               ),
-                            ),
-                          ),
-                        ],
+                              Visibility(
+                                visible:
+                                    _start != 0 && (state is! PinScreenLoading),
+                                child: Text(
+                                  'Wait for $_start seconds',
+                                  style: AppConfig.getTextStyle(
+                                    textColor: Colors.black,
+                                    textSize: TextSize.small,
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible:
+                                    _start == 0 && (state is! PinScreenLoading),
+                                child: RawMaterialButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _start = 60;
+                                    });
+                                    _startTimer();
+                                    BlocProvider.of<AuthBloc>(context)
+                                        .add(ResendOTP());
+                                  },
+                                  child: Text(
+                                    'Resend Sms',
+                                    style: AppConfig.getTextStyle(
+                                      textColor: Colors.black,
+                                      textSize: TextSize.small,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Visibility(
+                                visible: state is PinScreenLoading,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                        Theme.of(context).indicatorColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                       SizedBox(
                         height: AppConfig.screenHeight * 0.1,

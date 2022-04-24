@@ -11,6 +11,8 @@ class AuthScreenLoading extends AuthState {}
 //show loading in password screen for email flow
 class PasswordScreenLoading extends AuthState {}
 
+class PinScreenLoading extends AuthState {}
+
 //indicating UI to navigate to email auth flow
 class EmailAuth extends AuthState {}
 

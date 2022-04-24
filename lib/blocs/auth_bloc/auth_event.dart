@@ -17,9 +17,13 @@ class SubmitEmailAuth extends AuthEvent {
   );
 }
 
-// class SubmitPhoneAuth extends AuthEvent {
-//   final String phoneNumber;
-//   SubmitPhoneAuth(
-//     this.phoneNumber,
-//   );
-// }
+class SubmitPhoneAuth extends AuthEvent {
+  final String verificationId;
+  final String pin;
+  SubmitPhoneAuth({
+    required this.verificationId,
+    required this.pin,
+  });
+}
+
+class ResendOTP extends AuthEvent {}

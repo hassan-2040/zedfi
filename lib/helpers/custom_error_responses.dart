@@ -9,6 +9,10 @@ String customErrorResponses(Exception _error) {
       case 'invalid-email':
         _response = "Invalid Email Provided. Please use your correct email.";
         break;
+      case 'invalid-phone':
+        _response =
+            "Invalid Phone format. Please use the correct format for phone.";
+        break;
       case 'email-already-in-use':
         _response =
             "Email already used. Please sign in or use a different email.";
@@ -22,17 +26,19 @@ String customErrorResponses(Exception _error) {
       case 'user-profile-already-exists':
         _response = "User Profile Already Exists";
         break;
-        case 'email-not-provided':
+      case 'email-not-provided':
         _response = 'Email not provided';
+        break;
+      case 'phone-not-provided':
+        _response = 'Phone not provided';
         break;
       default:
         _response = "Cannot Authenticate for unknown error";
         break;
     }
   } else if (_error is FirebaseException) {
-      _response = "Failure: ${_error.code}";
-      printInfo('full error message: ${_error.message}');
-    
+    _response = "Failure: ${_error.code}";
+    printInfo('full error message: ${_error.message}');
   } else {
     _response = "Error: ${_error.toString()}";
   }

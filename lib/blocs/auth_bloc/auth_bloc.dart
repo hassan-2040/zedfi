@@ -12,12 +12,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepo _authRepo;
 
   String? email; //using this for saving the email b/w screens only
-
-  late final Map<String, dynamic> _phoneAuthStatus;
+  String? phone; //using this for resend OTP flow
 
   AuthBloc(this._authRepo) : super(AuthInitial()) {
     on<SubmitAuthRequest>(onSubmitAuthRequest);
     on<SubmitEmailAuth>(onSubmitEmailAuth);
+    on<SubmitPhoneAuth>(onSubmitPhoneAuth);
+    on<ResendOTP>(onResendOTP);
   }
 
   //using the string provided to route to phone or email auth flow
@@ -28,8 +29,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         email = event.authString;
         emit(EmailAuth());
       } else {
-        await _phoneVerification(event.authString);
+        if (_phoneFormatInvalid(event.authString)) {
+          throw FirebaseAuthException(code: 'invalid-phone');
+        }
+
+        await _authRepo.sendSmsCode(phoneNumber: event.authString);
+
+        phone = event.authString;
+
+        //waiting for the send sms code block to finish processing
+        await Future.delayed(const Duration(seconds: 2));
+
         emit(PhoneAuth());
+      }
+    } on Exception catch (_error) {
+      emit(AuthFailure(customErrorResponses(_error)));
+    }
+  }
+
+  void onResendOTP(ResendOTP event, emit) async {
+    try {
+      if (phone != null) {
+        await _authRepo.sendSmsCode(phoneNumber: phone!);
+      } else {
+        throw FirebaseAuthException(code: 'phone-not-provided');
       }
     } on Exception catch (_error) {
       emit(AuthFailure(customErrorResponses(_error)));
@@ -69,9 +92,32 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Future<void> _phoneVerification(String _phone) async {
-    _phoneAuthStatus = await _authRepo.sendSmsCode(phoneNumber: _phone);
+  Future<void> onSubmitPhoneAuth(SubmitPhoneAuth event, emit) async {
+    emit(PinScreenLoading());
+    try {
+      // Create a PhoneAuthCredential with the code
+      PhoneAuthCredential _credential = PhoneAuthProvider.credential(
+        verificationId: event.verificationId,
+        smsCode: event.pin,
+      );
 
-    printInfo('phone auth status: $_phoneAuthStatus');
+      // Sign the user in (or link) with the credential
+      await _authRepo.signInWithCredentials(_credential);
+      emit(AuthSuccess());
+    } on Exception catch (_error) {
+      emit(AuthFailure(customErrorResponses(_error)));
+    }
+  }
+
+  bool _phoneFormatInvalid(String _phoneNumber) {
+    if (_phoneNumber.length != 13 && _phoneNumber[0] != '+') {
+      return true;
+    }
+    ;
+    if (int.tryParse(_phoneNumber.split('+')[1]) == null) {
+      return true;
+    }
+
+    return false;
   }
 }
