@@ -53,52 +53,55 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            SizedBox(height: AppConfig.screenHeight * 0.1),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () => Navigator.pop(context),
-                  icon: const Icon(Icons.arrow_back),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Text(
-                    'Connect your wallet',
-                    style: AppConfig.getTextStyle(
-                      textSize: TextSize.main,
-                      fontWeight: FontWeight.bold,
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        body: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: AppConfig.screenHeight * 0.1),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: Text(
+                      'Connect your wallet',
+                      style: AppConfig.getTextStyle(
+                        textSize: TextSize.main,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Text(
-              'An Email has been sent to you for verification. Once you verify your email, you will be redirected to home.',
-              textAlign: TextAlign.center,
-              style: AppConfig.getTextStyle(
-                textSize: TextSize.large,
-                textColor: Colors.grey,
+                ],
               ),
-            ),
-            Expanded(
-                child: Center(
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).indicatorColor,
+              Text(
+                'An Email has been sent to you for verification. Once you verify your email, you will be redirected to home.',
+                textAlign: TextAlign.center,
+                style: AppConfig.getTextStyle(
+                  textSize: TextSize.large,
+                  textColor: Colors.grey,
                 ),
               ),
-            )),
-          ],
+              Expanded(
+                  child: Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Theme.of(context).indicatorColor,
+                  ),
+                ),
+              )),
+            ],
+          ),
         ),
       ),
     );

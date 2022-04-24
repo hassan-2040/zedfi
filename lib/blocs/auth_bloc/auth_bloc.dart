@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';
 import 'package:zedfi/helpers/custom_error_responses.dart';
+import 'package:zedfi/helpers/utilities.dart';
 import 'package:zedfi/repositories/auth_repo.dart';
 
 part 'auth_event.dart';
@@ -70,5 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _phoneVerification(String _phone) async {
     _phoneAuthStatus = await _authRepo.sendSmsCode(phoneNumber: _phone);
+
+    printInfo('phone auth status: $_phoneAuthStatus');
   }
 }
