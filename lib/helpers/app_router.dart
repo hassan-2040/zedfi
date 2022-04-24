@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:zedfi/screens/auth_screens/auth_screen.dart';
 
 import 'package:zedfi/screens/auth_screens/email_verification_screen.dart';
+import 'package:zedfi/screens/auth_screens/pin_verification_screen.dart';
 import 'package:zedfi/screens/home/home_screen.dart';
 import 'package:zedfi/screens/auth_screens/password_screen.dart';
 import 'package:zedfi/screens/welcome/welcome_screen.dart';
@@ -14,6 +14,7 @@ class AppRouter {
   static const String authScreenRoute = '/authScreen';
   static const String passwordScreenRoute = '/passwordScreen';
   static const String emailVerificationScreenRoute = '/emailVerificationScreen';
+  static const String pinVerificationScreenRoute = '/pinVerificationScreen';
 
   ///Used this function to make sure the home attribute of MaterialApp is not rendered
   ///in addition to the required screens. If this is not overridden, an extra screen pops up
@@ -49,6 +50,10 @@ class AppRouter {
       case emailVerificationScreenRoute:
         return MaterialPageRoute(
           builder: (_) => const EmailVerificationScreen(),
+        );
+      case pinVerificationScreenRoute:
+        return MaterialPageRoute(
+          builder: (_) => const PinVerificationScreen(),
         );
       default:
         return MaterialPageRoute(

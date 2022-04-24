@@ -108,11 +108,16 @@ class _AuthScreenState extends State<AuthScreen> {
                       listener: (context, state) {
                         if (state is EmailAuth) {
                           Navigator.pushNamed(
-                              context, AppRouter.passwordScreenRoute);
+                            context,
+                            AppRouter.passwordScreenRoute,
+                          );
                         }
 
                         if (state is PhoneAuth) {
-                          //TODO navigate to pin screen and send sms
+                          Navigator.pushNamed(
+                            context,
+                            AppRouter.pinVerificationScreenRoute,
+                          );
                         }
                       },
                       builder: (context, state) {

@@ -12,6 +12,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   String? email; //using this for saving the email b/w screens only
 
+  late final Map<String, dynamic> _phoneAuthStatus;
+
   AuthBloc(this._authRepo) : super(AuthInitial()) {
     on<SubmitAuthRequest>(onSubmitAuthRequest);
     on<SubmitEmailAuth>(onSubmitEmailAuth);
@@ -25,10 +27,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         email = event.authString;
         emit(EmailAuth());
       } else {
-        //TODO implement phone auth flow
+        await _phoneVerification(event.authString);
+        emit(PhoneAuth());
       }
-    } on Exception catch (_) {
-      rethrow;
+    } on Exception catch (_error) {
+      emit(AuthFailure(customErrorResponses(_error)));
     }
   }
 
@@ -63,5 +66,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } on Exception catch (_error) {
       emit(AuthFailure(customErrorResponses(_error)));
     }
+  }
+
+  Future<void> _phoneVerification(String _phone) async {
+    _phoneAuthStatus = await _authRepo.sendSmsCode(phoneNumber: _phone);
   }
 }

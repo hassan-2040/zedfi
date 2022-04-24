@@ -16,3 +16,10 @@ class SubmitEmailAuth extends AuthEvent {
     this.password,
   );
 }
+
+// class SubmitPhoneAuth extends AuthEvent {
+//   final String phoneNumber;
+//   SubmitPhoneAuth(
+//     this.phoneNumber,
+//   );
+// }

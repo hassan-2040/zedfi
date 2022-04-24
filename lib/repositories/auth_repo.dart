@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:zedfi/helpers/utilities.dart';
 
 class AuthRepo {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -39,9 +40,42 @@ class AuthRepo {
     }
   }
 
-  Future<void> sendVerificationEmail()async {
+  Future<void> sendVerificationEmail() async {
     try {
       await currentUser.sendEmailVerification();
+    } on Exception catch (_) {
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> sendSmsCode({
+    required String phoneNumber,
+  }) async {
+    final Map<String, dynamic> _temp = {};
+    try {
+      await _firebaseAuth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        // timeout: Duration(seconds: 30),
+        verificationCompleted: (AuthCredential credential) async {
+          await _firebaseAuth.signInWithCredential(credential);
+          _temp['autoSignInSuccess'] = true;
+        },
+        verificationFailed: (FirebaseAuthException exception) {
+          throw exception;
+        },
+        codeSent: (
+          String verificationId,
+          int? forceResendingToken,
+        ) {
+          _temp['verificationId'] = verificationId;
+          _temp['forceResendingToken'] = forceResendingToken;
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          printInfo('auto retrieval timeout');
+          //TODO handle this
+        },
+      );
+      return _temp;
     } on Exception catch (_) {
       rethrow;
     }
