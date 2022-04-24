@@ -74,11 +74,13 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                     width: 10,
                   ),
                   Expanded(
-                    child: Text(
-                      'Connect your wallet',
-                      style: AppConfig.getTextStyle(
-                        textSize: TextSize.main,
-                        fontWeight: FontWeight.bold,
+                    child: FittedBox(
+                      child: Text(
+                        'Connect your wallet',
+                        style: AppConfig.getTextStyle(
+                          textSize: TextSize.main,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

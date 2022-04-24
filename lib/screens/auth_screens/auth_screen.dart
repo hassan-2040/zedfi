@@ -57,11 +57,13 @@ class _AuthScreenState extends State<AuthScreen> {
                       width: 10,
                     ),
                     Expanded(
-                      child: Text(
-                        'Connect your wallet',
-                        style: AppConfig.getTextStyle(
-                          textSize: TextSize.main,
-                          fontWeight: FontWeight.bold,
+                      child: FittedBox(
+                        child: Text(
+                          'Connect your wallet',
+                          style: AppConfig.getTextStyle(
+                            textSize: TextSize.main,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
