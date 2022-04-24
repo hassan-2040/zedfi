@@ -1,9 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
-import 'package:zedfi/screens/auth/auth_screen.dart';
-import 'package:zedfi/screens/email_verification/email_verification_screen.dart';
+import 'package:zedfi/screens/auth_screens/auth_screen.dart';
+
+import 'package:zedfi/screens/auth_screens/email_verification_screen.dart';
 import 'package:zedfi/screens/home/home_screen.dart';
-import 'package:zedfi/screens/password/password_screen.dart';
+import 'package:zedfi/screens/auth_screens/password_screen.dart';
 import 'package:zedfi/screens/welcome/welcome_screen.dart';
 
 class AppRouter {
