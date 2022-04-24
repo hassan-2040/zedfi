@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zedfi/screens/auth/auth_screen.dart';
 import 'package:zedfi/screens/email_verification/email_verification_screen.dart';
+import 'package:zedfi/screens/home/home_screen.dart';
 import 'package:zedfi/screens/password/password_screen.dart';
 import 'package:zedfi/screens/welcome/welcome_screen.dart';
 
@@ -40,7 +41,11 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => const PasswordSceen(),
         );
-        case emailVerificationScreenRoute:
+      case homeScreenRoute:
+        return MaterialPageRoute(
+          builder: (_) => const HomeScreen(),
+        );
+      case emailVerificationScreenRoute:
         return MaterialPageRoute(
           builder: (_) => const EmailVerificationScreen(),
         );

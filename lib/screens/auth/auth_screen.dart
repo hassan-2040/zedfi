@@ -117,11 +117,15 @@ class _AuthScreenState extends State<AuthScreen> {
                       },
                       builder: (context, state) {
                         if (state is AuthScreenLoading) {
-                          return const SizedBox(
+                          return SizedBox(
                             height: 50,
                             width: double.infinity,
                             child: Center(
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                  Theme.of(context).indicatorColor,
+                                ),
+                              ),
                             ),
                           );
                         } else {

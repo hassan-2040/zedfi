@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zedfi/constants.dart';
 import 'package:zedfi/helpers/app_config.dart';
+import 'package:zedfi/helpers/app_router.dart';
+import 'package:zedfi/repositories/auth_repo.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
   const EmailVerificationScreen({Key? key}) : super(key: key);
@@ -11,6 +16,41 @@ class EmailVerificationScreen extends StatefulWidget {
 }
 
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
+  late Timer _timer;
+
+  @override
+  void initState() {
+    _timer = Timer.periodic(
+        const Duration(
+          seconds: 3,
+        ), (_timer) {
+      _checkEmailVerification();
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void _checkEmailVerification() async {
+    final _user = RepositoryProvider.of<AuthRepo>(context).currentUser;
+    await _user.reload();
+    if (_user.emailVerified) {
+      _timer.cancel();
+
+      //removing all screens in stack and pushing to home screen
+      //also stopping from returning to previous screens with back button
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        AppRouter.homeScreenRoute,
+        (route) => false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,16 +82,22 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                 ),
               ],
             ),
+            Text(
+              'An Email has been sent to you for verification. Once you verify your email, you will be redirected to home.',
+              textAlign: TextAlign.center,
+              style: AppConfig.getTextStyle(
+                textSize: TextSize.large,
+                textColor: Colors.grey,
+              ),
+            ),
             Expanded(
-              child: Text(
-                'An Email has been sent to you for verification. Once you verify your email, you will be redirected to home.',
-                textAlign: TextAlign.center,
-                style: AppConfig.getTextStyle(
-                  textSize: TextSize.large,
-                  textColor: Colors.grey,
+                child: Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).indicatorColor,
                 ),
               ),
-            )
+            )),
           ],
         ),
       ),
