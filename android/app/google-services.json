@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "95033355012",
+    "project_id": "zedfi-9d5a8",
+    "storage_bucket": "zedfi-9d5a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:95033355012:android:a33c4059b4a9c166fabe51",
+        "android_client_info": {
+          "package_name": "com.zedfi.demo.zedfi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "95033355012-h9vq7021djmj3em9837dhts9hl90upkt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zedfi.demo.zedfi",
+            "certificate_hash": "f93d835d61f052e19ecfa1c13442bdd1fd4e7f92"
+          }
+        },
+        {
+          "client_id": "95033355012-ac7phctgi6jg4vtuf5tbngeepn0tphjl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa9lhZOzOi6_CMPUsL3V_JLIlxaUk2Ww8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "95033355012-ac7phctgi6jg4vtuf5tbngeepn0tphjl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
