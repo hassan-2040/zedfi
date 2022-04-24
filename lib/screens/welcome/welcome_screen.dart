@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zedfi/constants.dart';
 import 'package:zedfi/utilities/app_config.dart';
+import 'package:zedfi/utilities/app_router.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -27,7 +28,9 @@ class WelcomeScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRouter.loginScreenRoute);
+                },
                 child: Text(
                   'Continue',
                   style: AppConfig.getTextStyle(
