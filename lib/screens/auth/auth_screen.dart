@@ -92,6 +92,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       ),
                       child: CustomTextFormField(
                         controller: _authController,
+                        keyboardType: TextInputType.emailAddress,
                         customValidator: (_s) => defaultValidator(_s),
                         prefixIcon: const Icon(
                           Icons.flag,
@@ -115,7 +116,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         }
                       },
                       builder: (context, state) {
-                        if (state is AuthLoading) {
+                        if (state is AuthScreenLoading) {
                           return const SizedBox(
                             height: 50,
                             width: double.infinity,

@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zedfi/blocs/auth_bloc/auth_bloc.dart';
 import 'package:zedfi/constants.dart';
 import 'package:zedfi/helpers/app_config.dart';
+import 'package:zedfi/helpers/app_router.dart';
 import 'package:zedfi/helpers/utilities.dart';
 import 'package:zedfi/screens/common_widgets/custom_text_form_field.dart';
+import 'package:zedfi/screens/common_widgets/feedback_widgets.dart';
 
 class PasswordSceen extends StatefulWidget {
   const PasswordSceen({Key? key}) : super(key: key);
@@ -17,6 +19,8 @@ class PasswordSceen extends StatefulWidget {
 class _PasswordSceenState extends State<PasswordSceen> {
   late final TextEditingController _passwordController;
   late final GlobalKey<FormState> _formKey;
+
+  bool _obscureText = true;
 
   @override
   void initState() {
@@ -89,15 +93,34 @@ class _PasswordSceenState extends State<PasswordSceen> {
                         ),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: CustomTextFormField(
+                      child: TextFormField(
                         controller: _passwordController,
-                        obscureText: true,
-                        customValidator: (_s) => defaultValidator(_s),
-                        prefixIcon: const Icon(
-                          Icons.flag,
-                          color: Colors.red,
+                        validator: (_s) => defaultValidator(_s),
+                        obscureText: _obscureText,
+                        style: AppConfig.getTextStyle(
+                          textSize: TextSize.sub,
+                          textColor: Colors.black,
+                          fontWeight: FontWeight.bold,
                         ),
-                        labelText: 'Password',
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.lock),
+                          suffixIcon: IconButton(
+                              icon: Icon(_obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() {
+                                  _obscureText = !_obscureText;
+                                });
+                              }),
+                          labelText: 'Password',
+                          labelStyle: AppConfig.getTextStyle(
+                            textSize: TextSize.large,
+                            textColor: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -105,15 +128,27 @@ class _PasswordSceenState extends State<PasswordSceen> {
                     ),
                     BlocConsumer<AuthBloc, AuthState>(
                       listener: (context, state) {
-                        //TODO : Handle the states
+                        if (state is AuthFailure) {
+                          FeedbackWidgets(context)
+                              .showFailureSnackBar(snackBarText: state.error);
+                        }
+
+                        if (state is ShowVerifyEmailScreen) {
+                          Navigator.pushNamed(
+                              context, AppRouter.emailVerificationScreenRoute);
+                        }
                       },
                       builder: (context, state) {
-                        if (state is AuthLoading) {
-                          return const SizedBox(
+                        if (state is PasswordScreenLoading) {
+                          return SizedBox(
                             height: 50,
                             width: double.infinity,
                             child: Center(
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation(
+                                  Theme.of(context).indicatorColor,
+                                ),
+                              ),
                             ),
                           );
                         } else {
@@ -123,7 +158,7 @@ class _PasswordSceenState extends State<PasswordSceen> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   BlocProvider.of<AuthBloc>(context).add(
-                                    SubmitAuthRequest(_passwordController.text),
+                                    SubmitEmailAuth(_passwordController.text),
                                   );
                                 }
                               },

@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:zedfi/constants.dart';
 
 class AppConfig {
-  static const primaryColor = Color(0xFF683ab7);
-  static const primaryColorLight = Color(0xFFc5a3ff);
-  static const backgroundColor = Color(0xFFede3ff);
-  static const primaryColorDark = Color(0xFF3c1d73);
 
   static late MediaQueryData _mediaQueryData;
 
