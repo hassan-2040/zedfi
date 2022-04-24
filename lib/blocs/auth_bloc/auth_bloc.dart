@@ -17,6 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SubmitEmailAuth>(onSubmitEmailAuth);
   }
 
+  //using the string provided to route to phone or email auth flow
   void onSubmitAuthRequest(SubmitAuthRequest event, emit) async {
     emit(AuthScreenLoading());
     try {
@@ -31,6 +32,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
+  //submitting email and password login/sign up flow and making sure user is verified
   void onSubmitEmailAuth(SubmitEmailAuth event, emit) async {
     emit(PasswordScreenLoading());
     try {
