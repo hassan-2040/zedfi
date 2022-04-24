@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zedfi/constants.dart';
+import 'package:zedfi/helpers/constants.dart';
 import 'package:zedfi/helpers/app_config.dart';
 
 class HomeScreen extends StatelessWidget {

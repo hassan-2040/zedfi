@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zedfi/blocs/auth_bloc/auth_bloc.dart';
-import 'package:zedfi/constants.dart';
+import 'package:zedfi/helpers/constants.dart';
 import 'package:zedfi/helpers/app_config.dart';
 import 'package:zedfi/helpers/app_router.dart';
 import 'package:zedfi/repositories/auth_repo.dart';

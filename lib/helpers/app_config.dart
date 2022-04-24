@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zedfi/constants.dart';
+import 'package:zedfi/helpers/constants.dart';
 
 class AppConfig {
 
