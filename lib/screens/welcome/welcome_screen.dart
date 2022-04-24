@@ -29,7 +29,7 @@ class WelcomeScreen extends StatelessWidget {
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.pushNamed(context, AppRouter.loginScreenRoute);
+                  Navigator.pushNamed(context, AppRouter.authScreenRoute);
                 },
                 child: Text(
                   'Continue',
