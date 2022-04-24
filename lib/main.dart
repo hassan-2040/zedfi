@@ -1,9 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zedfi/blocs/auth_bloc/auth_bloc.dart';
 import 'package:zedfi/constants.dart';
-import 'package:zedfi/screens/welcome/welcome_screen.dart';
-import 'package:zedfi/utilities/app_config.dart';
-import 'package:zedfi/utilities/app_router.dart';
+import 'package:zedfi/helpers/app_router.dart';
+import 'package:zedfi/repositories/auth_repo.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,24 +17,39 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.blue,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            primary: buttonColor,
-            onPrimary: Colors.grey,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<AuthRepo>(
+          create: (context) => AuthRepo(),
+        ),
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<AuthBloc>(
+            create: (context) => AuthBloc(RepositoryProvider.of<AuthRepo>(context)),
+          ),
+        ],
+        child: MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            brightness: Brightness.light,
+            primarySwatch: Colors.blue,
+            indicatorColor: contrastColor,
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                primary: contrastColor,
+                onPrimary: Colors.grey,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
             ),
           ),
+          initialRoute: AppRouter.welcomeScreenRoute,
+          onGenerateInitialRoutes: AppRouter.generateInitialRoute,
+          onGenerateRoute: AppRouter.generateRoute,
         ),
       ),
-      initialRoute: AppRouter.welcomeScreenRoute,
-      onGenerateInitialRoutes: AppRouter.generateInitialRoute,
-      onGenerateRoute: AppRouter.generateRoute,
     );
   }
 }

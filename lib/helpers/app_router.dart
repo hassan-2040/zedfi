@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zedfi/screens/auth/auth_screen.dart';
+import 'package:zedfi/screens/password/password_screen.dart';
 import 'package:zedfi/screens/welcome/welcome_screen.dart';
 
 class AppRouter {
@@ -8,6 +9,7 @@ class AppRouter {
   static const String homeScreenRoute = '/homeScreen';
   static const String welcomeScreenRoute = '/welcomeScreen';
   static const String authScreenRoute = '/authScreen';
+  static const String passwordScreenRoute = '/passwordScreen';
 
   ///Used this function to make sure the home attribute of MaterialApp is not rendered
   ///in addition to the required screens. If this is not overridden, an extra screen pops up
@@ -31,6 +33,10 @@ class AppRouter {
       case authScreenRoute:
         return MaterialPageRoute(
           builder: (_) => const AuthScreen(),
+        );
+      case passwordScreenRoute:
+        return MaterialPageRoute(
+          builder: (_) => const PasswordSceen(),
         );
       default:
         return MaterialPageRoute(

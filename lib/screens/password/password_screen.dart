@@ -4,31 +4,30 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zedfi/blocs/auth_bloc/auth_bloc.dart';
 import 'package:zedfi/constants.dart';
 import 'package:zedfi/helpers/app_config.dart';
-import 'package:zedfi/helpers/app_router.dart';
 import 'package:zedfi/helpers/utilities.dart';
 import 'package:zedfi/screens/common_widgets/custom_text_form_field.dart';
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key}) : super(key: key);
+class PasswordSceen extends StatefulWidget {
+  const PasswordSceen({Key? key}) : super(key: key);
 
   @override
-  State<AuthScreen> createState() => _AuthScreenState();
+  State<PasswordSceen> createState() => _PasswordSceenState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
-  late final TextEditingController _authController;
+class _PasswordSceenState extends State<PasswordSceen> {
+  late final TextEditingController _passwordController;
   late final GlobalKey<FormState> _formKey;
 
   @override
   void initState() {
     _formKey = GlobalKey<FormState>();
-    _authController = TextEditingController();
+    _passwordController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    _authController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -67,7 +66,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   ],
                 ),
                 Text(
-                  'We\'ll send you a confirmation code',
+                  'Enter Password',
                   style: AppConfig.getTextStyle(
                     textSize: TextSize.large,
                     textColor: Colors.grey,
@@ -91,13 +90,14 @@ class _AuthScreenState extends State<AuthScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: CustomTextFormField(
-                        controller: _authController,
+                        controller: _passwordController,
+                        obscureText: true,
                         customValidator: (_s) => defaultValidator(_s),
                         prefixIcon: const Icon(
                           Icons.flag,
                           color: Colors.red,
                         ),
-                        labelText: 'Phone Number or Email',
+                        labelText: 'Password',
                       ),
                     ),
                     const SizedBox(
@@ -105,14 +105,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     ),
                     BlocConsumer<AuthBloc, AuthState>(
                       listener: (context, state) {
-                        if (state is EmailAuth) {
-                          Navigator.pushNamed(
-                              context, AppRouter.passwordScreenRoute);
-                        }
-
-                        if (state is PhoneAuth) {
-                          //TODO navigate to pin screen and send sms
-                        }
+                        //TODO : Handle the states
                       },
                       builder: (context, state) {
                         if (state is AuthLoading) {
@@ -130,7 +123,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               onPressed: () {
                                 if (_formKey.currentState!.validate()) {
                                   BlocProvider.of<AuthBloc>(context).add(
-                                    SubmitAuthRequest(_authController.text),
+                                    SubmitAuthRequest(_passwordController.text),
                                   );
                                 }
                               },

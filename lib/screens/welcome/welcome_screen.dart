@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zedfi/constants.dart';
-import 'package:zedfi/utilities/app_config.dart';
-import 'package:zedfi/utilities/app_router.dart';
+import 'package:zedfi/helpers/app_config.dart';
+import 'package:zedfi/helpers/app_router.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
